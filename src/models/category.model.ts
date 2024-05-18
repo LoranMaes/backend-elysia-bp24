@@ -12,3 +12,11 @@ export interface SubCategory {
   created_at: Date;
   updated_at?: Date;
 }
+
+export interface CategoryCreate {
+  title: string;
+}
+
+export interface SubCategoryCreate {
+  title: string;
+}

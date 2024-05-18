@@ -14,3 +14,14 @@ export interface Task {
   created_at: Date;
   updated_at?: Date;
 }
+
+export interface TaskCreate {
+  start: Date;
+  end: Date;
+  title: string;
+  description: string;
+  main_category: number;
+  sub_category: number;
+  status: Status;
+  color: string;
+}
