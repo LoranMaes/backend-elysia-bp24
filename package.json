@@ -6,8 +6,11 @@
     "dev": "bun run --watch src/index.ts"
   },
   "dependencies": {
+    "@elysiajs/bearer": "^1.0.2",
+    "@elysiajs/cors": "^1.0.2",
     "@elysiajs/swagger": "^1.0.5",
     "elysia": "latest",
+    "elysia-rate-limit": "^4.0.0",
     "lucia": "^3.2.0",
     "oslo": "^1.2.0"
   },
