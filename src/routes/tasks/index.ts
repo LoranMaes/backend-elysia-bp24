@@ -1,7 +1,7 @@
 import Elysia from "elysia";
 import { generalSchema } from "../schema";
 
-const taskRoutes = new Elysia();
+const taskRoutes = new Elysia({ prefix: "/tasks" });
 
 taskRoutes
   .model(generalSchema)

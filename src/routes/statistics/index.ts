@@ -1,6 +1,6 @@
 import Elysia from "elysia";
 
-const statsRoutes = new Elysia();
+const statsRoutes = new Elysia({ prefix: "/statistics" });
 
 statsRoutes
   .get("/daily", () => {

@@ -1,6 +1,6 @@
 import Elysia from "elysia";
 
-const catRoutes = new Elysia();
+const catRoutes = new Elysia({ prefix: "/categories" });
 
 catRoutes
   .get("/", () => {

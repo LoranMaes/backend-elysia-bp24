@@ -1,26 +1,29 @@
 import { Language } from "./language.enum";
 
 export interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
+  id: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  profile_picture?: string;
-  role: Role;
+  profilePicture?: string | null;
+  role: string;
   password: string;
-  language: Language;
-  created_at: Date;
-  updated_at?: Date;
+  language: string;
+  createdAt: Date;
+  updatedAt?: Date | null;
 }
 
 export interface UserCreation {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  profile_picture?: string;
-  role: Role;
+  profilePicture?: File;
   password: string;
-  language: Language;
+}
+
+export interface UserLogin {
+  email: string;
+  password: string;
 }
 
 export enum Role {

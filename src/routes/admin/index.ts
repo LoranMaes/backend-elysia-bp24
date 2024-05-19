@@ -1,7 +1,7 @@
 import Elysia from "elysia";
 import { generalSchema } from "../schema";
 
-const adminRoutes = new Elysia();
+const adminRoutes = new Elysia({ prefix: "/admin" });
 
 adminRoutes
   .model(generalSchema)
