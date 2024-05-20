@@ -27,9 +27,13 @@ export namespace AuthService {
       console.log(user);
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
-      return sessionCookie;
+      return new Response(null, {
+        status: 200,
+        headers: {
+          "Set-Cookie": sessionCookie.serialize(),
+        },
+      });
     } catch (error) {
-      console.error(error);
       throw "User already exists";
     }
   };

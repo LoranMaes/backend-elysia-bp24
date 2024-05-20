@@ -1,5 +1,5 @@
 import { drizzle } from "drizzle-orm/bun-sqlite";
 import { Database } from "bun:sqlite";
 
-const sqlite = new Database();
+const sqlite = new Database("time-registration.db");
 export const db = drizzle(sqlite);

@@ -12,8 +12,7 @@ authRoutes
     async ({ body, error }) => {
       let user = null;
       try {
-        user = await Auth.register(body);
-        return { message: "User registered", data: user };
+        return await Auth.register(body);
       } catch (err) {
         return error(500, err);
       }
