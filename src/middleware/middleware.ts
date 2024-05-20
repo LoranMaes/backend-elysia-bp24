@@ -4,6 +4,7 @@ import Elysia from "elysia";
 import { verifyRequestOrigin } from "lucia";
 import type { User, Session } from "lucia";
 import { lucia } from "../libs/auth";
+import { ElysiaCookie } from "elysia/dist/cookies";
 
 export const csrfProtection = new Elysia().derive(
   async (context): Promise<{ user: User | null; session: Session | null }> => {
@@ -54,3 +55,11 @@ export const csrfProtection = new Elysia().derive(
     };
   }
 );
+
+export const isLoggedInGuard = async (
+  sessionId: string | undefined | null
+): Promise<boolean> => {
+  if (!sessionId) return false;
+  const { session, user } = await lucia.validateSession(sessionId);
+  return Boolean(session && user);
+};
