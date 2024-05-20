@@ -4,7 +4,7 @@ import taskRoutes from "./tasks";
 import statsRoutes from "./statistics";
 import catRoutes from "./categories";
 import adminRoutes from "./admin";
-import { isLoggedInGuard } from "../middleware/middleware";
+import { isAdminGuard, isLoggedInGuard } from "../middleware/middleware";
 
 const apiRoutes = new Elysia({ prefix: "/api" });
 
@@ -23,7 +23,18 @@ apiRoutes.use(authRoutes).guard(
       .use(taskRoutes)
       .use(statsRoutes)
       .use(catRoutes)
-      .guard({}, (app) => app.use(adminRoutes))
+      .guard(
+        {
+          beforeHandle: async ({ set, cookie: { auth_session } }) => {
+            const isAdmin = await isAdminGuard(auth_session.value);
+            if (!isAdmin) {
+              set.status = "Forbidden";
+              return { message: "You are not an admin" };
+            }
+          },
+        },
+        (app) => app.use(adminRoutes)
+      )
 );
 
 export default apiRoutes;

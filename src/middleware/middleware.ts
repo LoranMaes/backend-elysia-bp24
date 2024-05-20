@@ -5,6 +5,10 @@ import { verifyRequestOrigin } from "lucia";
 import type { User, Session } from "lucia";
 import { lucia } from "../libs/auth";
 import { ElysiaCookie } from "elysia/dist/cookies";
+import { Role } from "../models/user.model";
+import { db } from "../db";
+import { users } from "../db/schemas/users";
+import { sql } from "drizzle-orm";
 
 export const csrfProtection = new Elysia().derive(
   async (context): Promise<{ user: User | null; session: Session | null }> => {
@@ -62,4 +66,17 @@ export const isLoggedInGuard = async (
   if (!sessionId) return false;
   const { session, user } = await lucia.validateSession(sessionId);
   return Boolean(session && user);
+};
+
+export const isAdminGuard = async (
+  sessionId: string | undefined | null
+): Promise<boolean> => {
+  if (!sessionId) return false;
+  const { session, user } = await lucia.validateSession(sessionId);
+  const role: Role = db
+    .select()
+    .from(users)
+    .where(sql`id = ${user?.id}`)
+    .get()?.role as Role;
+  return Boolean(session && user && role === Role.ADMIN);
 };
