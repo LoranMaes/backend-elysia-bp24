@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { generalSchema } from "../schema";
+import { generalSchema } from "../routeValidators";
 
 const taskRoutes = new Elysia({ prefix: "/tasks" });
 

@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { generalSchema } from "../schema";
+import { generalSchema } from "../routeValidators";
 import { AuthService } from "../../services/auth.service";
 
 const authRoutes = new Elysia({ prefix: "/auth" });
@@ -30,6 +30,7 @@ authRoutes
     },
     {
       body: "route.login",
+      type: "multipart/form-data",
     }
   )
   .post("/logout", () => Auth.logout());

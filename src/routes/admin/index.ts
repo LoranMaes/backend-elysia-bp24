@@ -1,5 +1,5 @@
 import Elysia from "elysia";
-import { generalSchema } from "../schema";
+import { generalSchema } from "../routeValidators";
 
 const adminRoutes = new Elysia({ prefix: "/admin" });
 

@@ -31,7 +31,7 @@ bun drizzle-kit generate --dialect sqlite --schema ./src/db/schemas/*
 bun db:migrate
 ```
 
-5. To seed the database
+5. To seed the database (not yet implemented)
 
 ```bash
 bun db:seed
