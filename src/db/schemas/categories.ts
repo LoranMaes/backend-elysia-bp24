@@ -1,8 +1,9 @@
 import { createId } from "@paralleldrive/cuid2";
 import { relations, sql } from "drizzle-orm";
 import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { users } from "./users";
 import { tasks } from "./tasks";
+import { usersHasCategories } from "./users_has_categories";
+import { sub_categories } from "./sub_categories";
 
 // MANY TO MANY TO GET THE MOST USED CATS PER USER
 
@@ -12,8 +13,8 @@ export const categories = sqliteTable("categories", {
 });
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
-  usersHasCategories: many(users),
-  subCategories: many(categories),
+  usersHasCategories: many(usersHasCategories),
+  subCategories: many(sub_categories),
   task: many(tasks),
 }));
 

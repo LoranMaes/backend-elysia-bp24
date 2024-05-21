@@ -4,6 +4,7 @@ import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { categories } from "./categories";
 import { tasks } from "./tasks";
+import { usersHasSubCategories } from "./users_has_sub_categories";
 
 export const sub_categories = sqliteTable("sub_categories", {
   id: text("id").notNull().primaryKey().$defaultFn(createId),
@@ -16,7 +17,7 @@ export const sub_categories = sqliteTable("sub_categories", {
 export const subCategoriesRelations = relations(
   sub_categories,
   ({ one, many }) => ({
-    usersHasSubCategories: many(users),
+    usersHasSubCategories: many(usersHasSubCategories),
     tasks: many(tasks),
     category: one(categories, {
       fields: [sub_categories.categoryId],
