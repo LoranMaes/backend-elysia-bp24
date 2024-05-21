@@ -1,11 +1,14 @@
 import Elysia from "elysia";
 import { generalSchema } from "../routeValidators";
+import { AdminService } from "../../services/admin.service";
 
 const adminRoutes = new Elysia({ prefix: "/admin" });
+const Admin = AdminService;
 
 adminRoutes
   .model(generalSchema)
-  .get("/users", () => {
+  .get("/users", async ({}) => {
+    await Admin.getUsers();
     return { message: "Get all users" };
   })
   .get(
@@ -15,7 +18,7 @@ adminRoutes
     },
     { params: "route.id" }
   )
-  .post("/users", () => {
+  .post("/users", ({}) => {
     return { message: "Create new user" };
   })
   .delete(
