@@ -8,6 +8,7 @@ import { Language } from "../../models/language.enum";
 import { Role } from "../../models/user.model";
 import { sessions } from "./sessions";
 import { categories } from "./categories";
+import { tasks } from "./tasks";
 
 const languageValues = Object.values(Language) as [string, ...string[]];
 const roleValues = Object.values(Role) as [string, ...string[]];
@@ -29,6 +30,7 @@ export const users = sqliteTable("users", {
 
 export const userRelations = relations(users, ({ many }) => ({
   sessions: many(sessions),
+  tasks: many(tasks),
   usersHasCategories: many(categories),
 }));
 
