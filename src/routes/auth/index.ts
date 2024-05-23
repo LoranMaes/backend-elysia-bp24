@@ -11,7 +11,6 @@ authRoutes
   .post(
     "/register",
     async ({ body, error }) => {
-      let user = null;
       try {
         return await Auth.register(body);
       } catch (err) {

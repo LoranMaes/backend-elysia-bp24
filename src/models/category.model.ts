@@ -1,10 +1,10 @@
 export interface Category {
-  id: number;
+  id: string;
   title: string;
 }
 
 export interface SubCategory {
-  id: number;
+  id: string;
   title: string;
   main_category: Category;
 }

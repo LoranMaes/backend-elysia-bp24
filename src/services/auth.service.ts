@@ -71,17 +71,18 @@ export namespace AuthService {
     if (props.profilePicture) {
       hashedFileName = await saveProfilePicture(props.profilePicture, userId);
     }
-    const user = await createUser(
+    const user: User = await createUser(
       props,
       hashedPassword,
       userId,
       hashedFileName
     );
+
     await db.insert(users).values({ ...user });
 
     const sessionCookie = await createSessionAndCookie(user.id);
 
-    return new Response(null, {
+    return new Response("New user created!", {
       status: 200,
       headers: {
         "Set-Cookie": sessionCookie.serialize(),
@@ -113,7 +114,7 @@ export namespace AuthService {
 
     const sessionCookie = await createSessionAndCookie(user.id);
 
-    return new Response(null, {
+    return new Response("User logged in successfully", {
       status: 200,
       headers: {
         "Set-Cookie": sessionCookie.serialize(),
@@ -139,7 +140,7 @@ export namespace AuthService {
     await lucia.invalidateSession(session.id);
     const sessionCookie = lucia.createBlankSessionCookie();
 
-    return new Response(null, {
+    return new Response("Logged out successfully", {
       status: 200,
       headers: {
         "Set-Cookie": sessionCookie.serialize(),

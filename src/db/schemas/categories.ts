@@ -11,7 +11,7 @@ export const categories = sqliteTable("categories", {
 });
 
 // MANY TO MANY TO GET THE MOST USED CATEGORIES FOR A USER
-export const categoriesRelations = relations(categories, ({ many }) => ({
+export const categoriesRelations: any = relations(categories, ({ many }) => ({
   usersHasCategories: many(usersHasCategories),
   subCategories: many(sub_categories),
   task: many(tasks),

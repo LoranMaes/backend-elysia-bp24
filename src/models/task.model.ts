@@ -20,8 +20,8 @@ export interface TaskCreate {
   end: Date;
   title: string;
   description: string;
-  main_category: number;
-  sub_category: number;
+  main_category: string;
+  sub_category: string;
   status: Status;
   color: string;
 }

@@ -26,4 +26,7 @@ export const generalSchema = {
     email: t.String({ error: "Email is required" }),
     password: t.String({ error: "Password is required" }),
   }),
+  "route.createCategory": t.Object({
+    title: t.String({ error: "Title is required" }),
+  }),
 };
