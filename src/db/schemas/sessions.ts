@@ -4,9 +4,7 @@ import { relations } from "drizzle-orm";
 
 export const sessions = sqliteTable("sessions", {
   id: text("id").notNull().primaryKey(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
+  userId: text("user_id").notNull(),
   expiresAt: integer("expires_at").notNull(),
 });
 

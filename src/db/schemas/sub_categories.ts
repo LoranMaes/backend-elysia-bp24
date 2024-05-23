@@ -1,6 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { categories } from "./categories";
 import { tasks } from "./tasks";
@@ -9,9 +8,7 @@ import { usersHasSubCategories } from "./users_has_sub_categories";
 export const sub_categories = sqliteTable("sub_categories", {
   id: text("id").notNull().primaryKey().$defaultFn(createId),
   title: text("title").notNull().unique(),
-  categoryId: text("category_id")
-    .notNull()
-    .references(() => categories.id),
+  categoryId: text("category_id").notNull(),
 });
 
 export const subCategoriesRelations = relations(

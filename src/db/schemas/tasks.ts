@@ -18,11 +18,9 @@ export const tasks = sqliteTable("tasks", {
   color: text("color").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
-  categoryId: text("category_id").references(() => categories.id),
-  subCategoryId: text("sub_category_id").references(() => sub_categories.id),
+  userId: text("user_id").notNull(),
+  categoryId: text("category_id"),
+  subCategoryId: text("sub_category_id"),
 });
 
 export const taskRelations = relations(tasks, ({ one }) => ({

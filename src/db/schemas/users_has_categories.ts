@@ -11,12 +11,8 @@ import { relations } from "drizzle-orm";
 export const usersHasCategories = sqliteTable(
   "users_has_categories",
   {
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id),
-    categoryId: text("category_id")
-      .notNull()
-      .references(() => categories.id),
+    userId: text("user_id").notNull(),
+    categoryId: text("category_id").notNull(),
     total_amount: integer("total_amount").notNull(),
   },
   (t) => ({ pk: primaryKey({ columns: [t.userId, t.categoryId] }) })

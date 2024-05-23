@@ -11,12 +11,8 @@ import { sub_categories } from "./sub_categories";
 export const usersHasSubCategories = sqliteTable(
   "users_has_sub_categories",
   {
-    userId: text("user_id")
-      .notNull()
-      .references(() => users.id),
-    subCategoryId: text("category_id")
-      .notNull()
-      .references(() => sub_categories.id),
+    userId: text("user_id").notNull(),
+    subCategoryId: text("category_id").notNull(),
     total_amount: integer("total_amount").notNull(),
   },
   (t) => ({ pk: primaryKey({ columns: [t.userId, t.subCategoryId] }) })
