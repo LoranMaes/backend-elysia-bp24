@@ -21,15 +21,15 @@ adminRoutes
   )
   .post(
     "/users",
-    async ({ body, error }) => {
+    async ({ body }) => {
       return await ADMIN.createUserByAdmin(body);
     },
     { body: "route.register", type: "multipart/form-data" }
   )
   .delete(
     "/users/:id",
-    ({ params }) => {
-      return { message: "Delete user by id" };
+    async ({ params }) => {
+      return await ADMIN.deleteUserById(params.id);
     },
     { params: "route.id" }
   )

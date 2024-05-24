@@ -33,4 +33,20 @@ export namespace AdminService {
       data: newUser,
     };
   };
+
+  export const deleteUserById = async (id: string) => {
+    const user = db
+      .select()
+      .from(users)
+      .where(sql`id = ${id}`)
+      .get();
+
+    if (!user) return new Response("User not found", { status: 404 });
+
+    await AUTH_SERVICE.logoutAllSessions(id);
+
+    db.delete(users).where(sql`id = ${id}`);
+    
+    return { message: "User deleted successfully" };
+  };
 }

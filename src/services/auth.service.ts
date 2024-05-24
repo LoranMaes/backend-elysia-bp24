@@ -173,4 +173,12 @@ export namespace AuthService {
     const { user, session } = await lucia.validateSession(auth_session);
     return user;
   };
+
+  export const getAllUserSessions = async (user_id: string) => {
+    return await lucia.getUserSessions(user_id);
+  };
+
+  export const logoutAllSessions = async (user_id: string) => {
+    return await lucia.invalidateUserSessions(user_id);
+  };
 }
