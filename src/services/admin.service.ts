@@ -3,7 +3,6 @@ import { db } from "../db";
 import { users } from "../db/schemas/users";
 import { User, UserCreation } from "../models/user.model";
 import { AuthService } from "./auth.service";
-import { ApiResponse } from "../types/api.types";
 
 const AUTH_SERVICE = AuthService;
 
@@ -46,7 +45,7 @@ export namespace AdminService {
     await AUTH_SERVICE.logoutAllSessions(id);
 
     db.delete(users).where(sql`id = ${id}`);
-    
+
     return { message: "User deleted successfully" };
   };
 }

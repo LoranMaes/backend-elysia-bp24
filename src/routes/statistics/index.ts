@@ -2,6 +2,7 @@ import Elysia from "elysia";
 
 const statsRoutes = new Elysia({ prefix: "/statistics" });
 
+// TODO: Implement statistics routes (after implementing everything else in frontend)
 statsRoutes
   .get("/daily", () => {
     return { message: "Get daily statistics" };
