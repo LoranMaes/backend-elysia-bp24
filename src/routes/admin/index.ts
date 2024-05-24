@@ -4,25 +4,28 @@ import { AdminService } from "../../services/admin.service";
 import { UserService } from "../../services/user.service";
 
 const adminRoutes = new Elysia({ prefix: "/admin" });
-const Admin = AdminService;
+const ADMIN = AdminService;
 const US = UserService;
 
 adminRoutes
   .model(generalSchema)
-  .get("/users", async ({}) => {
-    await Admin.getUsers();
-    return { message: "Get all users" };
+  .get("/users", async () => {
+    return await ADMIN.getUsers();
   })
   .get(
     "/users/:id",
     ({ params }) => {
-      return { message: "Get user by id" };
+      return ADMIN.getUserById(params.id);
     },
     { params: "route.id" }
   )
-  .post("/users", ({}) => {
-    return { message: "Create new user" };
-  })
+  .post(
+    "/users",
+    async ({ body, error }) => {
+      return await ADMIN.createUserByAdmin(body);
+    },
+    { body: "route.register", type: "multipart/form-data" }
+  )
   .delete(
     "/users/:id",
     ({ params }) => {
@@ -41,6 +44,20 @@ adminRoutes
     },
     {
       body: "route.createCategory",
+      type: "multipart/form-data",
+    }
+  )
+  .post(
+    "/sub-categories",
+    async ({ body, error }) => {
+      try {
+        return await US.createSubCategory(body);
+      } catch (err) {
+        return error(500, err);
+      }
+    },
+    {
+      body: "route.createSubCategory",
       type: "multipart/form-data",
     }
   );

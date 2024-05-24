@@ -6,7 +6,7 @@ export interface Category {
 export interface SubCategory {
   id: string;
   title: string;
-  main_category: Category;
+  categoryId: string;
 }
 
 export interface CategoryCreate {
@@ -14,5 +14,6 @@ export interface CategoryCreate {
 }
 
 export interface SubCategoryCreate {
+  categoryId: string;
   title: string;
 }

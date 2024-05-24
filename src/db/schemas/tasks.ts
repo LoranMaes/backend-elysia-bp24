@@ -19,7 +19,7 @@ export const tasks = sqliteTable("tasks", {
   createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp" }),
   userId: text("user_id").notNull(),
-  categoryId: text("category_id"),
+  categoryId: text("category_id").notNull(),
   subCategoryId: text("sub_category_id"),
 });
 

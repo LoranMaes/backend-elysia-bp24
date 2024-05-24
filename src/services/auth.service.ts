@@ -1,8 +1,14 @@
-import { Role, User, UserCreation, UserLogin } from "../models/user.model";
+import {
+  Role,
+  User,
+  UserCreation,
+  UserLogin,
+  UserWithoutPassword,
+} from "../models/user.model";
 import { db } from "../db";
 import { users } from "../db/schemas/users";
 import { lucia } from "../libs/auth";
-import { Cookie, generateIdFromEntropySize } from "lucia";
+import { Cookie, generateIdFromEntropySize, User as UserLucia } from "lucia";
 import { Language } from "../models/language.enum";
 import { sql } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
@@ -60,7 +66,9 @@ export namespace AuthService {
     return `${timestamp + unique_identifier}.${extension}`;
   };
 
-  export const register = async (props: UserCreation) => {
+  export const registerNewUser = async (
+    props: UserCreation
+  ): Promise<UserWithoutPassword | Response> => {
     if (checkEmailExists(props.email)) {
       return new Response("Email already exists", { status: 400 });
     }
@@ -78,9 +86,19 @@ export namespace AuthService {
       hashedFileName
     );
 
-    await db.insert(users).values({ ...user });
+    const { password, ...newUser } = await db
+      .insert(users)
+      .values({ ...user })
+      .returning()
+      .get();
+    return newUser;
+  };
 
-    const sessionCookie = await createSessionAndCookie(user.id);
+  export const register = async (props: UserCreation) => {
+    const newUser = await registerNewUser(props);
+    if (newUser instanceof Response) return newUser;
+
+    const sessionCookie = await createSessionAndCookie(newUser.id);
 
     return new Response("New user created!", {
       status: 200,
@@ -146,5 +164,13 @@ export namespace AuthService {
         "Set-Cookie": sessionCookie.serialize(),
       },
     });
+  };
+
+  export const getCurrentUser = async (
+    auth_session: string
+  ): Promise<UserLucia | null> => {
+    if (!auth_session) return null;
+    const { user, session } = await lucia.validateSession(auth_session);
+    return user;
   };
 }

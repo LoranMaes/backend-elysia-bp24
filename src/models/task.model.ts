@@ -1,27 +1,24 @@
-import { Category, SubCategory } from "./category.model";
-import { Status } from "./status.enum";
-
 export interface Task {
-  id: number;
+  id: string;
+  userId: string;
   start: Date;
   end: Date;
   title: string;
-  description: string;
-  main_category: Category;
-  sub_category: SubCategory;
-  status: Status;
+  description?: string | null;
+  categoryId: string;
+  subCategoryId?: string | null;
+  status: string;
   color: string;
-  created_at: Date;
-  updated_at?: Date;
+  createdAt: Date;
+  updatedAt?: Date | null;
 }
 
 export interface TaskCreate {
-  start: Date;
-  end: Date;
+  start: string;
+  end: string;
   title: string;
-  description: string;
-  main_category: string;
-  sub_category: string;
-  status: Status;
+  description?: string | null;
+  categoryId: string;
+  subCategoryId?: string | null;
   color: string;
 }
