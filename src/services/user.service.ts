@@ -14,6 +14,8 @@ import { Status } from "../models/status.enum";
 import { AuthService } from "./auth.service";
 import { User as UserLucia } from "lucia";
 import { sub_categories } from "../db/schemas/sub_categories";
+import { usersHasCategories } from "../db/schemas/users_has_categories";
+import { usersHasSubCategories } from "../db/schemas/users_has_sub_categories";
 
 const AUTH_SERVICE = AuthService;
 
@@ -39,12 +41,15 @@ export namespace UserService {
     );
   };
 
-  const subCategoryExists = (sub_category_id: string): boolean => {
+  const subCategoryExists = (
+    sub_category_id: string,
+    category_id: string
+  ): boolean => {
     return (
       db
         .select()
-        .from(categories)
-        .where(sql`id = ${sub_category_id}`)
+        .from(sub_categories)
+        .where(sql`id = ${sub_category_id} AND category_id = ${category_id}`)
         .get() !== undefined
     );
   };
@@ -88,6 +93,15 @@ export namespace UserService {
     const all_categories = db.select().from(categories).all();
     const all_sub_categories = db.select().from(sub_categories).all();
     const categoriesDict: any = {};
+
+    const user_has_categories = db.select().from(usersHasCategories).all();
+    const user_has_sub_categories = db
+      .select()
+      .from(usersHasSubCategories)
+      .all();
+
+    console.log(user_has_categories);
+    console.log(user_has_sub_categories);
 
     all_categories.forEach((category) => {
       categoriesDict[category.id] = {
@@ -193,13 +207,84 @@ export namespace UserService {
     return task;
   };
 
+  const updateCategoryCount = async (categoryId: string, userId: string) => {
+    const category = db
+      .select()
+      .from(categories)
+      .where(sql`id = ${categoryId}`)
+      .get() as Category;
+    const count = db
+      .select()
+      .from(usersHasCategories)
+      .where(sql`category_id = ${categoryId} AND user_id = ${userId}`)
+      .get();
+    if (!category) {
+      return;
+    }
+    if (!count) {
+      db.insert(usersHasCategories)
+        .values({
+          categoryId,
+          userId,
+          totalAmount: 1,
+        })
+        .run();
+      return;
+    }
+    db.update(usersHasCategories)
+      .set({
+        totalAmount: count.totalAmount + 1,
+      })
+      .where(sql`category_id = ${categoryId}`)
+      .run();
+  };
+
+  const updateSubCategoryCount = async (
+    subCategoryId: string,
+    userId: string
+  ) => {
+    const category = db
+      .select()
+      .from(sub_categories)
+      .where(sql`id = ${subCategoryId}`)
+      .get() as Category;
+    const count = db
+      .select()
+      .from(usersHasSubCategories)
+      .where(sql`category_id = ${subCategoryId} AND user_id = ${userId}`)
+      .get();
+    if (!category) {
+      return;
+    }
+    if (!count) {
+      db.insert(usersHasSubCategories)
+        .values({
+          subCategoryId,
+          userId,
+          totalAmount: 1,
+        })
+        .run();
+
+      return;
+    }
+    db.update(usersHasSubCategories)
+      .set({
+        totalAmount: count.totalAmount + 1,
+      })
+      .where(sql`category_id = ${subCategoryId}`)
+      .run();
+  };
+
   export const createTask = async (props: TaskCreate, auth_session: string) => {
     if (!categoryExists(props.categoryId)) {
       return new Response("Category doesn't exist", {
         status: 400,
       });
     }
-    if (props.subCategoryId && !subCategoryExists(props.subCategoryId)) {
+    if (
+      props.subCategoryId &&
+      !subCategoryExists(props.subCategoryId, props.categoryId)
+    ) {
       return new Response("Sub-category doesn't exist", {
         status: 400,
       });
@@ -223,6 +308,9 @@ export namespace UserService {
     const task: Task = await makeTask(props, user.id);
 
     await db.insert(tasks).values({ ...task });
+    if (props.categoryId) await updateCategoryCount(props.categoryId, user.id);
+    if (props.subCategoryId)
+      await updateSubCategoryCount(props.subCategoryId, user.id);
 
     return {
       message: "Task created successfully",

@@ -13,7 +13,7 @@ export const usersHasCategories = sqliteTable(
   {
     userId: text("user_id").notNull(),
     categoryId: text("category_id").notNull(),
-    total_amount: integer("total_amount").notNull(),
+    totalAmount: integer("total_amount").notNull(),
   },
   (t) => ({ pk: primaryKey({ columns: [t.userId, t.categoryId] }) })
 );

@@ -18,10 +18,16 @@ const app = new Elysia();
 // use(cors()) - This is for CORS
 // use(csrfProtection) - This is for CSRF protection
 
+const allowedOrigin = "localhost:5173";
+
 app
-  .use(rateLimit())
+  // .use(rateLimit())
+  .use(
+    cors({
+      origin: Bun.env.FRONTEND_URL || allowedOrigin,
+    })
+  )
   .use(swagger())
-  .use(cors())
   .use(csrfProtection)
   .use(apiRoutes)
   .onError(({ set }) => {

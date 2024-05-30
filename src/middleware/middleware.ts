@@ -4,7 +4,6 @@ import Elysia from "elysia";
 import { verifyRequestOrigin } from "lucia";
 import type { User, Session } from "lucia";
 import { lucia } from "../libs/auth";
-import { ElysiaCookie } from "elysia/dist/cookies";
 import { Role } from "../models/user.model";
 import { db } from "../db";
 import { users } from "../db/schemas/users";
@@ -13,6 +12,7 @@ import { sql } from "drizzle-orm";
 export const csrfProtection = new Elysia().derive(
   async (context): Promise<{ user: User | null; session: Session | null }> => {
     // CSRF check
+    console.log(context);
     if (context.request.method !== "GET") {
       const originHeader = context.request.headers.get("Origin");
       // NOTE: You may need to use `X-Forwarded-Host` instead
