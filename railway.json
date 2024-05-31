@@ -1,0 +1,20 @@
+{
+  "builds": [
+    {
+      "src": ".",
+      "use": "@railway/bun",
+      "cmd": "bun install && bun drizzle-kit migrate"
+    }
+  ],
+  "services": [
+    {
+      "name": "app",
+      "envs": {
+        "DATABASE_PATH": "/time-registration.db"
+      },
+      "volumes": {
+        "data": "/"
+      }
+    }
+  ]
+}
