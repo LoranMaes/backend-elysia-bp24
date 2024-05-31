@@ -17,6 +17,8 @@
     "restartPolicyMaxRetries": 10
   },
   "scripts": {
-     "migrate": "drizzle migrate --config drizzle.config.js"
+    "drizzle-kit": "bun add -D drizzle-kit",
+    "generate-migration": "bun drizzle-kit migrate",
+    "migrate": "bun drizzle-kit generate --schema src/db/schemas/* --dialect sqlite"
   }
 }
