@@ -21,12 +21,6 @@ const app = new Elysia();
 
 const allowedOrigin = "localhost:5173";
 
-if (Bun.env.NODE_ENV === "production") {
-  $`bun add -D drizzle-kit`;
-  $`bun drizzle-kit migrate`;
-  $`bun drizzle-kit generate --schema src/db/schemas/* --dialect sqlite`;
-}
-
 app
   // .use(rateLimit())
   .use(
