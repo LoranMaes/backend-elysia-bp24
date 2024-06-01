@@ -1,4 +1,4 @@
-import { Lucia, TimeSpan } from "lucia";
+import { Lucia } from "lucia";
 import { db } from "../db";
 import { DrizzleSQLiteAdapter } from "@lucia-auth/adapter-drizzle";
 import { users } from "../db/schemas/users";
@@ -13,7 +13,8 @@ export const lucia = new Lucia(adapter, {
   sessionCookie: {
     expires: false,
     attributes: {
-      secure: Bun.env.NODE_ENV === "production",
+      secure: true,
+      sameSite: "none",
     },
   },
   getUserAttributes: (attributes) => {

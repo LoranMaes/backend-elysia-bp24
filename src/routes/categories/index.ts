@@ -5,10 +5,10 @@ import { generalSchema } from "../routeValidators";
 const catRoutes = new Elysia({ prefix: "/categories" });
 const US = UserService;
 
-catRoutes.model(generalSchema).get("/", () => {
+catRoutes.model(generalSchema).get("/", async ({ cookie: { auth_session } }) => {
   return {
     message: "Fetched categories successfully",
-    data: US.getCategories(),
+    data: await US.getCategories(auth_session.value),
   };
 });
 

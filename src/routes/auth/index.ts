@@ -36,7 +36,7 @@ authRoutes
   )
   .post(
     "/login",
-    async ({ body, error }) => {
+    async ({ body, error, cookie }) => {
       try {
         return await Auth.login(body);
       } catch (err) {

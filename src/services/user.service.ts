@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 import { db } from "../db";
 import { categories } from "../db/schemas/categories";
 import {
@@ -89,19 +89,26 @@ export namespace UserService {
     };
   };
 
-  export const getCategories = () => {
+  export const getCategories = async (auth_session: string) => {
+    const user = await AUTH_SERVICE.getCurrentUser(auth_session);
+    if (!user) {
+      return new Response("You are not logged in", { status: 400 });
+    }
     const all_categories = db.select().from(categories).all();
     const all_sub_categories = db.select().from(sub_categories).all();
     const categoriesDict: any = {};
 
-    const user_has_categories = db.select().from(usersHasCategories).all();
+    // Here is the total amount a user used a category or sub category.
+    const user_has_categories = db
+      .select()
+      .from(usersHasCategories)
+      .where(sql`user_id = ${user.id}`)
+      .all();
     const user_has_sub_categories = db
       .select()
       .from(usersHasSubCategories)
+      .where(sql`user_id = ${user.id}`)
       .all();
-
-    console.log(user_has_categories);
-    console.log(user_has_sub_categories);
 
     all_categories.forEach((category) => {
       categoriesDict[category.id] = {
@@ -120,6 +127,9 @@ export namespace UserService {
         });
       }
     });
+
+    // TODO
+    // Get the top 4 most used categories or sub categories.
 
     const result = Object.values(categoriesDict);
     return result;
@@ -183,6 +193,7 @@ export namespace UserService {
       .select()
       .from(tasks)
       .where(sql`user_id = ${user.id}`)
+      .orderBy(desc(tasks.end))
       .all();
   };
 

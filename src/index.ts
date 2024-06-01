@@ -2,9 +2,7 @@ import { Elysia } from "elysia";
 import apiRoutes from "./routes/api";
 import swagger from "@elysiajs/swagger";
 import cors from "@elysiajs/cors";
-import { rateLimit } from "elysia-rate-limit";
 import { csrfProtection } from "./middleware/middleware";
-import { $ } from "bun";
 
 const app = new Elysia();
 
@@ -19,13 +17,13 @@ const app = new Elysia();
 // use(cors()) - This is for CORS
 // use(csrfProtection) - This is for CSRF protection
 
-const allowedOrigin = "localhost:5173";
+const allowedOrigin = "localhost:4173";
 
 app
   // .use(rateLimit())
   .use(
     cors({
-      origin: Bun.env.FRONTEND_URL || allowedOrigin,
+      origin: [Bun.env.FRONTEND_URL || allowedOrigin],
     })
   )
   .use(swagger())
