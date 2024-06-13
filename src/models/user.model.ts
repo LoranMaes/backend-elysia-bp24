@@ -1,5 +1,3 @@
-import { Language } from "./language.enum";
-
 export interface User {
   id: string;
   firstName: string;

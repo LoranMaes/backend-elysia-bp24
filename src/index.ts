@@ -1,8 +1,9 @@
 import { Elysia } from "elysia";
 import apiRoutes from "./routes/api";
 import swagger from "@elysiajs/swagger";
-import cors from "@elysiajs/cors";
+import cors, { HTTPMethod } from "@elysiajs/cors";
 import { csrfProtection } from "./middleware/middleware";
+import { rateLimit } from "elysia-rate-limit";
 
 const app = new Elysia();
 
@@ -17,16 +18,33 @@ const app = new Elysia();
 // use(cors()) - This is for CORS
 // use(csrfProtection) - This is for CSRF protection
 
-const allowedOrigin = "localhost:4173";
+const corsConfig = {
+  origin: "localhost:5173",
+  methods: ["GET", "POST", "PATCH", "DELETE", "PUT"] as HTTPMethod[],
+  allowedHeaders: "*",
+  exposedHeaders: "*",
+  maxAge: 5,
+  credentials: true,
+};
+
+const swaggerConfig = {
+  documentation: {
+    info: {
+      title: "ILVO - Time registration API",
+      description: "API documentation for Elysia",
+      version: "1.0.0",
+    },
+  },
+};
 
 app
-  // .use(rateLimit())
   .use(
-    cors({
-      origin: [Bun.env.FRONTEND_URL || allowedOrigin],
+    rateLimit({
+      max: 100,
     })
   )
-  .use(swagger())
+  .use(cors(corsConfig))
+  .use(swagger(swaggerConfig))
   .use(csrfProtection)
   .use(apiRoutes)
   .onError(({ set }) => {

@@ -13,7 +13,6 @@ import { Language } from "../models/language.enum";
 import { sql } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { sessions } from "../db/schemas/sessions";
-import { ElysiaCookie } from "elysia/dist/cookies";
 
 export namespace AuthService {
   const createUser = async (
@@ -139,7 +138,7 @@ export namespace AuthService {
       },
     });
   };
-  export const logout = async (auth_session: ElysiaCookie) => {
+  export const logout = async (auth_session: string) => {
     if (!auth_session) {
       return new Response("You are not logged in", { status: 400 });
     }
@@ -147,7 +146,7 @@ export namespace AuthService {
     const session = db
       .select()
       .from(sessions)
-      .where(sql`id = ${auth_session.value}`)
+      .where(sql`id = ${auth_session}`)
       .get();
 
     if (!session) {

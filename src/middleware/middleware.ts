@@ -10,12 +10,16 @@ import { users } from "../db/schemas/users";
 import { sql } from "drizzle-orm";
 
 export const csrfProtection = new Elysia().derive(
-  async (context): Promise<{ user: User | null; session: Session | null }> => {
+  { as: "global" },
+  async (
+    context
+  ): Promise<{
+    user: User | null;
+    session: Session | null;
+  }> => {
     // CSRF check
-    console.log(context);
     if (context.request.method !== "GET") {
       const originHeader = context.request.headers.get("Origin");
-      // NOTE: You may need to use `X-Forwarded-Host` instead
       const hostHeader = context.request.headers.get("Host");
       if (
         !originHeader ||
@@ -29,7 +33,6 @@ export const csrfProtection = new Elysia().derive(
       }
     }
 
-    // use headers instead of Cookie API to prevent type coercion
     const cookieHeader = context.request.headers.get("Cookie") ?? "";
     const sessionId = lucia.readSessionCookie(cookieHeader);
     if (!sessionId) {
@@ -38,6 +41,7 @@ export const csrfProtection = new Elysia().derive(
         session: null,
       };
     }
+
     const { session, user } = await lucia.validateSession(sessionId);
     if (session && session.fresh) {
       const sessionCookie = lucia.createSessionCookie(session.id);

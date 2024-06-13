@@ -12,6 +12,9 @@ adminRoutes
   .get("/users", async () => {
     return await ADMIN.getUsers();
   })
+  .get("/tasks", async () => {
+    return await ADMIN.getTasks();
+  })
   .get(
     "/users/:id",
     ({ params }) => {

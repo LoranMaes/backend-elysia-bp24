@@ -130,9 +130,55 @@ export namespace UserService {
 
     // TODO
     // Get the top 4 most used categories or sub categories.
+    const combined = [...user_has_categories, ...user_has_sub_categories];
+    combined.sort((a, b) => b.totalAmount - a.totalAmount);
+    let topCategories: any = combined.slice(0, 4);
+    topCategories = topCategories.map((item: any) => {
+      // This object is easy to use in the frontend to display the top categories.
+      /* 
+      If main_category_title is null, then it's a main category (because title will always be filled in)
+      If main_category_title is not null, then it's a sub category and you can easily display this on the frontend (because in the design main_category_title is under the title)
+      
+      SUB CATEGORY ⬇️
+      {
+        id: "sub_category_id",
+        totalAmount: 12,
+        title: "Melkkoeien",
+        main_category_title: "Voederen"
+      }
+
+        MAIN CATEGORY ⬇️
+      {
+        id: "category_id",
+        totalAmount: 5,
+        title: "Voederen",
+        main_category_title: null
+      }
+      */
+      return {
+        id: item.categoryId || item.subCategoryId,
+        totalAmount: item.totalAmount,
+        title: item.subCategoryId
+          ? all_sub_categories.find((cat) => cat.id === item.subCategoryId)
+              ?.title
+          : all_categories.find((cat) => cat.id === item.categoryId)?.title,
+        main_category_title: item.subCategoryId
+          ? all_categories.find(
+              (cat) =>
+                cat.id ===
+                all_sub_categories.find(
+                  (sub_cat) => sub_cat.id === item.subCategoryId
+                )?.categoryId
+            )?.title
+          : null,
+      };
+    });
 
     const result = Object.values(categoriesDict);
-    return result;
+    return {
+      categories: result,
+      top_categories: topCategories,
+    };
   };
   export const getSubCategories = (): SubCategory[] => {
     return db.select().from(sub_categories).all();
@@ -189,6 +235,7 @@ export namespace UserService {
     if (!user) {
       return new Response("You are not logged in", { status: 400 });
     }
+
     return db
       .select()
       .from(tasks)

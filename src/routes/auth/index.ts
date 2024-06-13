@@ -50,7 +50,7 @@ authRoutes
   )
   .post("/logout", async ({ cookie: { auth_session }, error }) => {
     try {
-      return await Auth.logout(auth_session);
+      return await Auth.logout(auth_session.value);
     } catch (err) {
       return error(500, err);
     }

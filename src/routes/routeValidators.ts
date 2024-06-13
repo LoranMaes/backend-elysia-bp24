@@ -55,7 +55,7 @@ export const generalSchema = {
     }),
     description: t.Optional(
       t.String({
-        error: "Description is required",
+        error: "Description should be between 10 and 100 characters",
         minLength: 10,
         maxLength: 100,
       })
