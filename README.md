@@ -8,6 +8,7 @@
 ## Development
 
 1. Create a new .env file and fill it in with your details
+TIP: Change cors origin depending on where you're testing from.
 
 ```bash
 cp .env.example .env
