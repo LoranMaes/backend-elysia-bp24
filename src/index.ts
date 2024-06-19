@@ -19,7 +19,7 @@ const app = new Elysia();
 // use(csrfProtection) - This is for CSRF protection
 
 const corsConfig = {
-  origin: "localhost:5173",
+  origin: Bun.env.FRONTEND_URL || "localhost:5173",
   methods: ["GET", "POST", "PATCH", "DELETE", "PUT"] as HTTPMethod[],
   allowedHeaders: "*",
   exposedHeaders: "*",
