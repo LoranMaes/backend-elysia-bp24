@@ -2,7 +2,7 @@ import Elysia from "elysia";
 
 const statsRoutes = new Elysia({ prefix: "/statistics" });
 
-// TODO: Implement statistics routes (after implementing everything else in frontend)
+// TODO: If researchers want specific statistics, they can use these routes
 statsRoutes
   .get("/daily", () => {
     return { message: "Get daily statistics" };
